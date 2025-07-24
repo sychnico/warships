@@ -28,6 +28,18 @@ public class GameplayService {
         String secondNickname = gameRepository.findSecondPlayerNicknameBySessionId(sessionId);
         MoveResult moveResult = null;
 
+        //проверки
+        if (sessionId == null) {
+            throw new IllegalArgumentException("Session ID cannot be null");
+        }
+        if (nickname == null || nickname.isBlank()) {
+            throw new IllegalArgumentException("Nickname cannot be empty");
+        }
+        if (x < 0 || x > 9 || y < 0 || y > 9) {
+            throw new IllegalArgumentException("Coordinates must be between 0 and 9");
+        }
+
+
         //удар игрока
         int cellCode = battleFieldRepository.get(secondNickname, x, y);
 
@@ -65,13 +77,12 @@ public class GameplayService {
                 if (battleFieldRepository.get(nickname, i, j) == 1){
                     botHitX = i;
                     botHitY = j;
-                    break;
                 }
             }
         }
 
-        cellCode = battleFieldRepository.get(nickname, x, y);
-        battleFieldRepository.set(nickname, x, y, cellCode+2);
+        cellCode = battleFieldRepository.get(nickname, botHitX, botHitY);
+        battleFieldRepository.set(nickname, botHitX, botHitY, cellCode+2);
 
         //проверка победы бота
         if (!battleFieldRepository.hasAliveShips(nickname)){

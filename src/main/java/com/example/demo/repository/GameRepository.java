@@ -17,6 +17,6 @@ public interface GameRepository extends JpaRepository<GameSession, Long> {
             "and gs.type = 'PvP'", nativeQuery = true)
     List<GameSession> getAvailableSessions();
 
-    @Query(value = "SELECT g.playerTwo.nickname FROM game_sessions g WHERE g.id = :sessionId", nativeQuery = true)
+    @Query(value = "SELECT p.nickname FROM players p join game_sessions g on p.id = g.player_two_id WHERE g.id = :sessionId", nativeQuery = true)
     String findSecondPlayerNicknameBySessionId(@Param("sessionId") Long sessionId);
 }

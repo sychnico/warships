@@ -23,6 +23,11 @@ public class StartGameService {
     public GameSession startGame(String userName, GameType type) {
 
         Player player = playerRepository.findByNickname(userName);
+        if (player == null) {
+            player = new Player();
+            player.setNickname(userName);
+            player = playerRepository.save(player);
+        }
         GameSession gameSession = new GameSession();
         gameSession.setPlayerOne(player);
         gameSession.setType(type);
@@ -35,10 +40,16 @@ public class StartGameService {
 
         if (type == GameType.PvE){
 
-            Player bot = new Player();
-            String botName = userName + "bot";
-            bot.setNickname(botName);
+            String botName = userName + "_bot";
+            Player bot = playerRepository.findByNickname(botName);
+            if (bot == null) {
+                bot = new Player();
+                bot.setNickname(botName);
+                bot = playerRepository.save(bot);
+            }
             gameSession.setPlayerTwo(bot);
+            savedSession = gameRepository.save(gameSession);
+
             int[][] botField = generateBattlefield();
             battleFieldRepository.saveField(botName, botField);
 
