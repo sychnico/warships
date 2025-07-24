@@ -2,30 +2,29 @@ package com.example.demo.service;
 
 import com.example.demo.enums.GameType;
 import com.example.demo.model.GameSession;
-import com.example.demo.model.Gamer;
+import com.example.demo.model.Player;
 import com.example.demo.repository.BattleFieldRepository;
 import com.example.demo.repository.GameRepository;
-import com.example.demo.repository.GamerRepository;
+import com.example.demo.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class StartGameService {
 
-    private final GamerRepository gamerRepository;
+    private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final BattleFieldRepository battleFieldRepository;
 
     public GameSession startGame(String userName, GameType type) {
 
-        Gamer gamer = gamerRepository.findByNickname(userName);
+        Player player = playerRepository.findByNickname(userName);
         GameSession gameSession = new GameSession();
-        gameSession.setPlayerOne(gamer);
+        gameSession.setPlayerOne(player);
         gameSession.setType(type);
         gameSession.setCreatedAt(LocalDateTime.now());
         GameSession savedSession = gameRepository.save(gameSession);
@@ -33,6 +32,17 @@ public class StartGameService {
         int[][] field = generateBattlefield();
 
         battleFieldRepository.saveField(userName, field);
+
+        if (type == GameType.PvE){
+
+            Player bot = new Player();
+            String botName = userName + "bot";
+            bot.setNickname(botName);
+            gameSession.setPlayerTwo(bot);
+            int[][] botField = generateBattlefield();
+            battleFieldRepository.saveField(botName, botField);
+
+        }
 
         return gameSession;
     }

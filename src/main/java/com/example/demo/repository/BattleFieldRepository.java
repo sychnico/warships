@@ -8,6 +8,10 @@ import java.util.HashMap;
 public class BattleFieldRepository {
     private static final HashMap<String, int[][]> fields = new HashMap<>();
     private static final int FIELD_SIZE = 10;
+    private static final int SHIP = 1;
+    private static final int EMPTY = 0;
+    private static final int MISS = 2;
+    private static final int HIT = 3;
 
     /**
      * Сохраняет игровое поле для указанного пользователя
@@ -91,4 +95,21 @@ public class BattleFieldRepository {
         }
         return copy;
     }
+
+    public boolean hasAliveShips(String userName) {
+        int[][] field = fields.get(userName);
+        if (field == null) {
+            throw new IllegalStateException("Field not found for user: " + userName);
+        }
+
+        for (int i = 0; i < FIELD_SIZE; i++){
+            for (int j = 0; j < FIELD_SIZE; j++){
+                if (field[i][j] == SHIP) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

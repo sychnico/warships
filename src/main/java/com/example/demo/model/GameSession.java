@@ -22,11 +22,11 @@ public class GameSession {
     @ManyToOne
     @JoinColumn(name = "player_one_id", nullable = false)
     @JsonBackReference
-    private Gamer playerOne;
+    private Player playerOne;
     @ManyToOne
     @JoinColumn(name = "player_two_id")
     @JsonBackReference
-    private Gamer playerTwo;
+    private Player playerTwo;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private GameStatus status;
@@ -40,13 +40,13 @@ public class GameSession {
     @ManyToOne
     @JoinColumn(name = "winner_id")
     @JsonBackReference
-    private Gamer winner;
+    private Player winner;
 
     public void startGame() {
         this.status = GameStatus.IN_PROGRESS;
     }
 
-    public void finishGame(Gamer winner) {
+    public void finishGame(Player winner) {
         this.status = GameStatus.FINISHED;
         this.winner = winner;
         this.finishedAt = LocalDateTime.now();

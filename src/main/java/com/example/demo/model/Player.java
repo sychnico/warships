@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "gamers")
+@Table(name = "players")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Gamer {
+public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Gamer {
 
     @Override
     public String toString() {
-        return "Gamer{" +
+        return "Player{" +
                 "id=" + id +
                 ", nickname='" + nickname + '\'' +
                 '}';
